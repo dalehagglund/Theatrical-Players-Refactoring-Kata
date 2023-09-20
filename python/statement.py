@@ -1,16 +1,21 @@
 import math
 from dataclasses import dataclass
 
-@dataclass
 class Play:
-    id: str
-    name: str
-    type: str
-    
+    def __init__(self, id: str, name: str, type: str):
+        if type not in ("tragedy", "comedy"):
+            raise ValueError(f'unknown type: {type}')
+        self._id: str = id
+        self._name: str = name
+        self._type: str = type
+        
+    def id(self) -> str: return self._id
+    def name(self) -> str: return self._name
+
     def performance_cost(self, audience: int) -> int:
-        if self.type == "tragedy":
+        if self._type == "tragedy":
             return 40000 + 1000 * max(0, audience - 30)
-        elif self.type == "comedy":
+        elif self._type == "comedy":
             return (
                 30000 
                 + (300 * audience)
@@ -23,7 +28,7 @@ class Play:
     def volume_credits(self, audience: int) -> int:
         credits = 0
         credits += max(audience - 30, 0)
-        if self.type == "comedy":
+        if self._type == "comedy":
             credits += audience // 5
         return credits
 
@@ -46,7 +51,7 @@ def statement(invoice, plays):
         this_amount = play.performance_cost(perf['audience'])
         volume_credits += play.volume_credits(perf['audience'])
 
-        result += f' {play.name}: {format_as_dollars(this_amount/100)} ({perf["audience"]} seats)\n'
+        result += f' {play.name()}: {format_as_dollars(this_amount/100)} ({perf["audience"]} seats)\n'
         total_amount += this_amount
 
     result += f'Amount owed is {format_as_dollars(total_amount/100)}\n'

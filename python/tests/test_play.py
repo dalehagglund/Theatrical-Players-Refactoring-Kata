@@ -3,9 +3,9 @@ from statement import Play
 
 def test_play_construction():
     p = Play("ado", "Much Ado About Nothing", "comedy")
-    assert p.id == "ado"
-    assert p.name == "Much Ado About Nothing"
-    assert p.type == "comedy"
+    assert p._id == "ado"
+    assert p._name == "Much Ado About Nothing"
+    assert p._type == "comedy"
     
 def test_tragedy_performance_costs():
     p = Play("", "", "tragedy")
