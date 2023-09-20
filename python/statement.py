@@ -19,6 +19,13 @@ class Play:
             )
         else:
             raise ValueError(f'unknown type: {self.type}')
+            
+    def volume_credits(self, audience: int) -> int:
+        credits = 0
+        credits += max(audience - 30, 0)
+        if self.type == "comedy":
+            credits += audience // 5
+        return credits
 
 def statement(invoice, plays):
     total_amount = 0
@@ -37,13 +44,8 @@ def statement(invoice, plays):
         play = plays[perf['playID']]
         
         this_amount = play.performance_cost(perf['audience'])
+        volume_credits += play.volume_credits(perf['audience'])
 
-        # add volume credits
-        volume_credits += max(perf['audience'] - 30, 0)
-        # add extra credit for every ten comedy attendees
-        if "comedy" == play.type:
-            volume_credits += math.floor(perf['audience'] / 5)
-        # print line for this order
         result += f' {play.name}: {format_as_dollars(this_amount/100)} ({perf["audience"]} seats)\n'
         total_amount += this_amount
 
