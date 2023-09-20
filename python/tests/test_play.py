@@ -1,5 +1,5 @@
 import pytest
-from statement import Play
+from play import Play
 
 def test_play_construction():
     p = Play("ado", "Much Ado About Nothing", "comedy")
