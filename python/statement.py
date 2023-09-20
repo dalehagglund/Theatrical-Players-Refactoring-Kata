@@ -1,7 +1,14 @@
 import math
 from play import Play
+from typing import Protocol
 
-def statement(invoice, plays):
+class InvoiceFormatter(Protocol):
+    pass
+    
+class TextFormatter(InvoiceFormatter):
+    pass
+    
+def statement(format: InvoiceFormatter, invoice, plays):
     total_amount = 0
     volume_credits = 0
     result = f'Statement for {invoice["customer"]}\n'
