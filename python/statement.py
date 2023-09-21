@@ -2,6 +2,7 @@ import math
 from dataclasses import dataclass
 from play import Play
 from typing import Protocol, Iterator
+from contextlib import contextmanager
 
 class InvoiceFormatter(Protocol):
     pass
@@ -40,6 +41,34 @@ class Invoice:
     def customer(self) -> str: return self._customer
     def total_cost(self) -> int: return self._total_cost
     def total_credits(self) -> int: return self._total_credits
+    
+def format_as_html(inv: Invoice) -> str:
+    output: list[str] = []
+    def emit(s):
+        output.append(s)
+    @contextmanager
+    def tag(name):
+        emit(f"<{name}>\n")
+        yield
+        emit(f"</{name}>\n")
+    def emit_table_row(kind, *columns):
+        with tag("tr"):
+            for data in columns:
+                with tag(kind): emit(str(data))
+    with tag("html"), tag("body"):
+        with tag("h1"): emit(f'Statement for {inv.customer()}\n')
+        with tag("table"):
+            emit_table_row("th", "Play", "Cost", "Audience")             
+            for item in inv.line_items():
+                emit_table_row(
+                    "td",
+                    item.play.name(), item.cost, item.audience
+                )
+        with tag("p"):
+            emit(f'Amount Owed is: {inv.total_cost()}\n')
+            emit("<br/>")
+            emit(f"You've earned {inv.total_credits()} credits\n")
+    return "".join(output)
 
 def format_as_text(inv: Invoice) -> str:
     def format_as_dollars(amount):

@@ -1,0 +1,29 @@
+<html>
+<body>
+<h1>
+Statement for Looney Tunes Playhouse
+</h1>
+<table>
+<tr>
+<th>
+Play</th>
+<th>
+Cost</th>
+<th>
+Audience</th>
+</tr>
+<tr>
+<td>
+Hamlet: Prince of Denmark</td>
+<td>
+40000</td>
+<td>
+0</td>
+</tr>
+</table>
+<p>
+Amount Owed is: 40000
+<br/>You've earned 0 credits
+</p>
+</body>
+</html>
