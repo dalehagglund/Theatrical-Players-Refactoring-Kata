@@ -41,16 +41,7 @@ class Invoice:
     def total_cost(self) -> int: return self._total_cost
     def total_credits(self) -> int: return self._total_credits
 
-def statement(invoice, plays):
-    plays = {
-        id: Play(id, info["name"], info["type"])        
-        for id, info in plays.items()
-    }
-
-    inv = Invoice(invoice["customer"])
-    for perf in invoice["performances"]:
-        inv.add_performance(plays[perf["playID"]], perf["audience"])
-
+def format_as_text(inv: Invoice) -> str:
     def format_as_dollars(amount):
         return f"${amount:0,.2f}"
     def statement_title(customer):
@@ -65,10 +56,10 @@ def statement(invoice, plays):
     output_lines.append(
         statement_title(inv.customer())
     )
-    for item in inv.line_items():
-        output_lines.append(
-            performance_line(item)
-        )
+    output_lines.extend(
+        performance_line(item)
+        for item in inv.line_items()
+    )
     output_lines.append(
         f'Amount owed is {format_as_dollars(inv.total_cost()/100)}\n'
     )
@@ -78,3 +69,14 @@ def statement(invoice, plays):
     
     return "".join(output_lines)
 
+def statement(invoice, plays):
+    plays = {
+        id: Play(id, info["name"], info["type"])        
+        for id, info in plays.items()
+    }
+
+    inv = Invoice(invoice["customer"])
+    for perf in invoice["performances"]:
+        inv.add_performance(plays[perf["playID"]], perf["audience"])
+        
+    return format_as_text(inv)
