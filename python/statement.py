@@ -69,7 +69,7 @@ def format_as_text(inv: Invoice) -> str:
     
     return "".join(output_lines)
 
-def statement(invoice, plays):
+def make_invoice(invoice, plays):
     plays = {
         id: Play(id, info["name"], info["type"])        
         for id, info in plays.items()
@@ -78,5 +78,5 @@ def statement(invoice, plays):
     inv = Invoice(invoice["customer"])
     for perf in invoice["performances"]:
         inv.add_performance(plays[perf["playID"]], perf["audience"])
-        
-    return format_as_text(inv)
+
+    return inv
